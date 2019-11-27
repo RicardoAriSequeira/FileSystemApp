@@ -1,0 +1,160 @@
+package pt.tecnico.mydrive.domain;
+
+class MyDrive{
+	int dataID;
+}
+
+class User{
+	String username;
+	String password;
+  	String name;
+    String homedir;
+	String umask;
+}
+
+class Root extends User{}
+
+class Guest extends User{}
+
+class File{
+	String name;
+	int fileID;
+	String permissions;
+	DateTime lastModified;
+}
+
+class PlainFile extends File{
+	String content;
+}
+
+class Directory extends File{}
+
+class Link extends PlainFile{}
+
+class App extends PlainFile{}
+
+class Login{
+	long token;
+	DateTime lastAccess;
+}
+
+class EnvironmentVariable {
+  String name;
+  String value;
+}
+
+class ExtensionAssociation {
+  String extension;
+}
+
+relation LoginContainsEnvironmentVariables {
+  Login playsRole login {
+    multiplicity 1;
+  }
+
+  EnvironmentVariable playsRole loginVariables {
+    multiplicity *;
+  }
+}
+
+relation DomainRootHasMyDriveApplication {
+  .pt.ist.fenixframework.DomainRoot playsRole root {
+    multiplicity 0..1;
+  }
+  MyDrive playsRole mydrive {
+    multiplicity 0..1;
+  }
+}
+
+relation MyDriveContainsLogins {
+	MyDrive playsRole myDrive {
+	  multiplicity 1;
+	}
+
+	Login playsRole login {
+	  multiplicity *;
+	}
+}
+
+relation UsersLogIn {
+	User playsRole user {
+	   multiplicity 1;
+	} 
+
+	Login playsRole login {
+	    multiplicity *;
+	}
+}
+
+relation CurrentDirectoryLogin {
+	Directory playsRole currentDir {
+		multiplicity 1;
+	}
+
+	Login playsRole login {
+		multiplicity *;
+	}
+}
+
+relation MyDriveContainsUsers {
+  MyDrive playsRole myDrive {
+    multiplicity 1;
+  }
+  User playsRole mydriveusers {
+    multiplicity *;
+  }
+}
+
+relation MyDriveContainsFiles{
+  MyDrive playsRole mydrive {
+    multiplicity 1;
+  }
+  File playsRole mydrivefiles {
+    multiplicity *;
+  }
+}
+
+relation UserOwnsFiles {
+  User playsRole user {
+    multiplicity 1;
+  }
+  File playsRole userfiles {
+    multiplicity *;
+  }
+}
+
+relation DirectoryContainsFiles {
+  Directory playsRole directory {
+    multiplicity 1;
+  }
+  File playsRole dirfiles {
+    multiplicity *;
+  }
+}
+
+relation MyDriveHasRootDir {
+  MyDrive playsRole myDrive {
+    multiplicity 1;
+  }
+  Directory playsRole rootDir {
+    multiplicity 0..1;
+  }
+}
+
+relation UserHasExtentionAssociations {
+  User playsRole user {
+    multiplicity 1;
+  }
+  ExtensionAssociation playsRole association {
+    multiplicity 0..*;
+  }
+}
+
+relation ExtensionAssociationHasPlainFile {
+  ExtensionAssociation playsRole association {
+    multiplicity 0..*;
+  }
+  PlainFile playsRole plainFile {
+    multiplicity 1;
+  }
+}

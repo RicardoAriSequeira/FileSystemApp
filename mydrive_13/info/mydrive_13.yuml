@@ -1,0 +1,30 @@
+[MyDrive| int dataID;]
+[User| String username; String password; String name; String homedir; String umask;]
+[User]^-[Root]
+[Root]
+[User]^-[Guest]
+[Guest]
+[File| String name; int fileID; String permissions; DateTime lastModified;]
+[File]^-[PlainFile]
+[PlainFile| String content;]
+[File]^-[Directory]
+[Directory]
+[PlainFile]^-[Link]
+[Link]
+[PlainFile]^-[App]
+[App]
+[Login| long token; DateTime lastAccess;]
+[EnvironmentVariable| String name; String value;]
+[ExtensionAssociation| String extension;]
+[Login]1 login - loginVariables *[EnvironmentVariable] // LoginContainsEnvironmentVariables
+[.pt.ist.fenixframework.DomainRoot]0..1 root - mydrive 0..1[MyDrive] // DomainRootHasMyDriveApplication
+[MyDrive]1 myDrive - login *[Login] // MyDriveContainsLogins
+[User]1 user - login *[Login] // UsersLogIn
+[Directory]1 currentDir - login *[Login] // CurrentDirectoryLogin
+[MyDrive]1 myDrive - mydriveusers *[User] // MyDriveContainsUsers
+[MyDrive]1 mydrive - mydrivefiles *[File] // MyDriveContainsFiles
+[User]1 user - userfiles *[File] // UserOwnsFiles
+[Directory]1 directory - dirfiles *[File] // DirectoryContainsFiles
+[MyDrive]1 myDrive - rootDir 0..1[Directory] // MyDriveHasRootDir
+[User]1 user - association 0..*[ExtensionAssociation] // UserHasExtentionAssociations
+[ExtensionAssociation]0..* association - plainFile 1[PlainFile] // ExtensionAssociationHasPlainFile

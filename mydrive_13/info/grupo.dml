@@ -1,0 +1,97 @@
+package pt.tecnico.myDrive.domain;
+
+class MyDrive{
+	int dataID;
+}
+
+class User{
+	String username;
+	String password;
+	String name;
+	String umask;
+}
+
+class Root extends User{}
+
+class File{
+	String name;
+	int fileID;
+	String permissions;
+	DateTime lastModified;
+}
+
+class PlainFile extends File{
+	String content;
+}
+
+class Directory extends File{
+}
+
+class Link extends PlainFile{
+}
+
+class App extends PlainFile{
+}
+
+relation DomainRootHasMyDriveApplication {
+  .pt.ist.fenixframework.DomainRoot playsRole root {
+    multiplicity 0..1;
+  }
+  MyDrive playsRole mydrive {
+    multiplicity 0..1;
+  }
+}
+
+relation MyDriveContainsUsers {
+  MyDrive playsRole myDrive {
+    multiplicity 0..1;
+  }
+  User playsRole mydriveusers {
+    multiplicity *;
+  }
+}
+
+relation MyDriveContainsFiles{
+  MyDrive playsRole mydrive {
+    multiplicity 0..1;
+  }
+  File playsRole mydrivefiles {
+    multiplicity *;
+  }
+}
+
+relation UserOwnsFiles {
+  User playsRole userOwner {
+    multiplicity 0..1;
+  }
+  File playsRole userfiles {
+    multiplicity *;
+  }
+}
+
+relation DirectoryContainsFiles {
+  Directory playsRole directory {
+    multiplicity 0..1;
+  }
+  File playsRole dirfiles {
+    multiplicity *;
+  }
+}
+
+relation UserHasHomeDir {
+  User playsRole user {
+    multiplicity 0..1;
+  }
+  Directory playsRole userhomedir {
+    multiplicity 0..1;
+  }
+}
+
+relation MyDriveHasRootDir {
+  MyDrive playsRole myDrive {
+    multiplicity 0..1;
+  }
+  Directory playsRole rootDir {
+    multiplicity 0..1;
+  }
+}

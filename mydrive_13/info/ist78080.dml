@@ -1,0 +1,108 @@
+package mydrive;
+
+class MyDrive{
+	int dataID;
+}
+
+relation DomainRootHasMyDriveApplication {
+  .pt.ist.fenixframework.DomainRoot playsRole root {
+    multiplicity 0..1;
+  }
+  MyDrive playsRole mydrive {
+    multiplicity 0..1;
+  }
+}
+
+
+class User{
+	String username;
+	String password;
+	String name;
+	String umask;
+	/* home dir association */
+	int userID;
+}
+
+relation MyDriveContainsUsers {
+  MyDrive playsRole myDrive {
+    multiplicity 0..1;
+  }
+  User playsRole mydriveusers {
+    multiplicity *;
+  }
+}
+
+relation MyDriveContainsFiles{
+  MyDrive playsRole mydrive {
+    multiplicity 0..1;
+  }
+  File playsRole mydrivefiles {
+    multiplicity *;
+  }
+}
+
+class File{
+	String fileName;
+	int fileID;
+	String name;
+	/* owner association*/
+	boolean readPermission;
+	boolean writePermission;
+	boolean executionPermission;
+	boolean eliminationPermission;	
+	LocalDate lastModified;
+}
+
+relation UserOwnsFiles {
+  User playsRole userOwner {
+    multiplicity 0..1;
+  }
+  File playsRole userfiles {
+    multiplicity *;
+  }
+}
+
+relation UserHasHomeDir {
+  User playsRole user {
+    multiplicity 0..1;
+  }
+  Directory playsRole userhomedir {
+    multiplicity 0..1;
+  }
+}
+
+class PlainFile extends File{
+	String content;
+}
+
+class Directory extends File{
+	String ownDir;
+	String parentDir;
+}
+
+relation DirectoryContainsFiles {
+  Directory playsRole directory {
+    multiplicity 0..1;
+  }
+  File playsRole dirfiles {
+    multiplicity *;
+  }
+}
+
+class Link extends PlainFile{
+	String link;
+}
+
+relation FileContainLinks {
+  File playsRole file {
+    multiplicity 0..1;
+  }
+  Link playsRole filelinks {
+    multiplicity *;
+  }
+}
+
+
+class App extends PlainFile{
+	String javaFlags;
+}
